@@ -1,62 +1,64 @@
-def ASSIGNMENT(new_list, i, old_list, j):
-    new_list[i] = old_list[j]
-
-
-def mergeSort(list_to_sort_by_merge):
-    if (
-        len(list_to_sort_by_merge) > 1
-        and not len(list_to_sort_by_merge) < 1
-        and len(list_to_sort_by_merge) != 0
-    ):
-        mid = len(list_to_sort_by_merge) // 2
-        left = list_to_sort_by_merge[:mid]
-        right = list_to_sort_by_merge[mid:]
-
-        mergeSort(left)
-        mergeSort(right)
-
-        l = 0
-        r = 0
-        i = 0
-
-        while l < len(left) and r < len(right):
-            if left[l] <= right[r]:
-                ASSIGNMENT(new_list=list_to_sort_by_merge, i=i, old_list=left, j=l)
-                l += 1
-            else:
-                ASSIGNMENT(new_list=list_to_sort_by_merge, i=i, old_list=right, j=r)
-                r += 1
-            i += 1
-
-        while l < len(left):
-            list_to_sort_by_merge[i] = left[l]
-            l += 1
-            i += 1
-
-        while r < len(right):
-            list_to_sort_by_merge[i] = right[r]
-            r += 1
-            i += 1
-
-
 import matplotlib.pyplot as plt
 
-my_list = [54, 26, 93, 17, 77, 31, 44, 55, 20]
-x = range(len(my_list))
+def merge_sort(values):
+    if len(values) <= 1:
+        return
 
-fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
+    # Split the list into two halves
+    middle = len(values) // 2
+    l = values[:middle]
+    r = values[middle:]
 
-ax[0].bar(x, my_list, color="red")
-ax[0].set_title("Unsorted List")
-ax[0].set_xlabel("Category")
-ax[0].set_ylabel("Value")
+    # Recursively sort both halves
+    merge_sort(l)
+    merge_sort(r)
 
-mergeSort(my_list)
-x = range(len(my_list))
+    # Merge the sorted halves
+    merge(values, l, r)
 
-ax[1].bar(x, my_list, color="green")
-ax[1].set_title("Sorted List")
-ax[1].set_xlabel("Category")
-ax[1].set_ylabel("Value")
 
-plt.show()
+def merge(values, l, r):
+    l_index = 0
+    r_index = 0
+    target_index = 0
+
+    # Compare elements from both halves and place the smaller one first
+    while l_index < len(l) and r_index < len(r):
+        if l[l_index] <= r[r_index]:
+            values[target_index] = l[l_index]
+            l_index += 1
+        else:
+            values[target_index] = r[r_index]
+            r_index += 1
+        target_index += 1
+
+    # Copy remaining elements from the left and right halves
+    while l_index < len(l):
+        values[target_index] = l[l_index]
+        l_index += 1
+        target_index += 1
+
+    while r_index < len(r):
+        values[target_index] = r[r_index]
+        r_index += 1
+        target_index += 1
+
+
+def plot_values(values, title):
+    positions = range(len(values))
+    plt.plot(positions, values, marker="o")
+    plt.title(title)
+    plt.xlabel("Index")
+    plt.ylabel("Value")
+    plt.show()
+
+
+def main():
+    values = [54, 26, 93, 17, 77, 31, 44, 55, 20]
+    plot_values(values, "Before sorting")
+    merge_sort(values)
+    plot_values(values, "After sorting")
+
+
+if __name__ == "__main__":
+    main()
