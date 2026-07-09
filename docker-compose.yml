@@ -1,0 +1,14 @@
+services:
+  tests:
+    build: .
+    volumes:
+      - ./:/app
+    command: pytest
+
+  run:
+    build: .
+    volumes:
+      - ./:/app
+    environment:
+      INPUT: "[1,2,3,4,3,1,2]"
+    command: python run_unique.py
